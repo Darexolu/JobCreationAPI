@@ -84,6 +84,9 @@ namespace JobCreationAPI.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Email")
+                        .IsUnique();
+
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -92,6 +95,49 @@ namespace JobCreationAPI.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("JobCreationAPI.Models.Job", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(3000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("EmployerId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Requirements")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal?>("Salary")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployerId");
+
+                    b.ToTable("Jobs");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -222,6 +268,17 @@ namespace JobCreationAPI.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("JobCreationAPI.Models.Job", b =>
+                {
+                    b.HasOne("JobCreationAPI.Models.ApplicationUser", "Employer")
+                        .WithMany("Jobs")
+                        .HasForeignKey("EmployerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Employer");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -271,6 +328,11 @@ namespace JobCreationAPI.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("JobCreationAPI.Models.ApplicationUser", b =>
+                {
+                    b.Navigation("Jobs");
                 });
 #pragma warning restore 612, 618
         }

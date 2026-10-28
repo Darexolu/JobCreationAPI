@@ -6,7 +6,6 @@ namespace JobCreationAPI.Models
 {
 	public class ApplicationUser : IdentityUser
 	{
-		public Guid Id { get; set; } = Guid.NewGuid();
 
 		[Required]
 		[MaxLength(100)]
@@ -19,6 +18,8 @@ namespace JobCreationAPI.Models
 
 		public EmployerVerificationStatus VerificationStatus { get; set; }
 			= EmployerVerificationStatus.Pending;
+
+		public ICollection<Job> Jobs { get; set; } = new List<Job>();
 
 	}
 }

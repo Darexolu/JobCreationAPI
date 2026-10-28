@@ -11,5 +11,23 @@ namespace JobCreationAPI.Data
 		{
 		}
 		public DbSet<ApplicationUser> Users { get; set; }
+		public DbSet<Job> Jobs => Set<Job>();
+
+		protected override void OnModelCreating(
+			ModelBuilder modelBuilder)
+		{
+			base.OnModelCreating(modelBuilder);
+
+			modelBuilder.Entity<ApplicationUser>()
+				.HasIndex(x => x.Email)
+				.IsUnique();
+
+			modelBuilder.Entity<Job>()
+				.HasOne(x => x.Employer)
+				.WithMany(x => x.Jobs)
+				.HasForeignKey(x => x.EmployerId)
+				.OnDelete(DeleteBehavior.Restrict);
+		}
 	}
 }
+
